@@ -120,9 +120,11 @@ const WarpedVideoPlayer: React.FC<Props> = ({
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                width,
-                height,
+                width: '100%',
+                height: '100%',
                 objectFit: 'fill',
+                minWidth: '100%',
+                minHeight: '100%',
               }}
               playsInline
               onLoadedData={() => setIsReady(true)}

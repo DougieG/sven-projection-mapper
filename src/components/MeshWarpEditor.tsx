@@ -254,13 +254,16 @@ const MeshWarpEditor: React.FC<Props> = ({
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: size.width,
-                    height: size.height,
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'fill',
+                    minWidth: '100%',
+                    minHeight: '100%',
                   }}
                   muted
                   playsInline
                   loop
+                  autoPlay
                 />
               ) : (
                 <Video
