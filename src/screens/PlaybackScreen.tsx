@@ -27,10 +27,20 @@ type Props = {
 };
 
 // Keys that trigger playback (adjust based on your Bluetooth shutter button)
-const TRIGGER_KEYS = [' ', 'Enter', 'ArrowUp', 'MediaPlayPause'];
+// Most Bluetooth shutters send: Space, Enter, VolumeUp, or a camera key
+const TRIGGER_KEYS = [
+  ' ',           // Space
+  'Enter',       // Enter key
+  'ArrowUp',     // Some remotes
+  'MediaPlayPause',
+  'AudioVolumeUp',   // Volume up (web standard)
+  'AudioVolumeDown', // Volume down (web standard)
+  'VolumeUp',        // Volume up (older)
+  'VolumeDown',      // Volume down (older)
+];
 // Keys for cue navigation
-const NEXT_CUE_KEYS = ['ArrowRight', 'ArrowDown'];
-const PREV_CUE_KEYS = ['ArrowLeft', 'ArrowUp'];
+const NEXT_CUE_KEYS = ['ArrowRight', 'n', 'N'];
+const PREV_CUE_KEYS = ['ArrowLeft', 'p', 'P'];
 
 /**
  * PlaybackScreen
