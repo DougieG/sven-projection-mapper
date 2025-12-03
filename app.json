@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Projection Mapper",
+    "slug": "concave-projection-mapper",
+    "version": "1.0.0",
+    "sdkVersion": "51.0.0",
+    "platforms": ["ios", "web"],
+    "orientation": "landscape",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sven.projectionmapper",
+      "requiresFullScreen": true,
+      "infoPlist": {
+        "UIStatusBarHidden": true,
+        "UIViewControllerBasedStatusBarAppearance": false,
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ],
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ]
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
