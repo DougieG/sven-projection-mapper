@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MeshWarpEditor from '../components/MeshWarpEditor';
+import ResizableVideoContainer from '../components/ResizableVideoContainer';
 import { VideoCue } from '../types/video';
 
 type MeshPoint = { id: string; x: number; y: number };
@@ -115,15 +116,17 @@ const CalibrationScreen: React.FC<Props> = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Mesh Editor - full screen */}
+      {/* Mesh Editor - resizable */}
       <View style={styles.editorContainer}>
-        <MeshWarpEditor
-          mesh={mesh}
-          onMeshChange={onMeshChange}
-          showVideo={showVideo}
-          videoUri={videoUri}
-          editable={true}
-        />
+        <ResizableVideoContainer>
+          <MeshWarpEditor
+            mesh={mesh}
+            onMeshChange={onMeshChange}
+            showVideo={showVideo}
+            videoUri={videoUri}
+            editable={true}
+          />
+        </ResizableVideoContainer>
       </View>
 
       {/* Cue List Panel (collapsible) */}

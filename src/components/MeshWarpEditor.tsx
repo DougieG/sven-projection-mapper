@@ -6,7 +6,7 @@ import {
   LayoutChangeEvent,
   GestureResponderEvent,
 } from 'react-native';
-import Svg, { Line, Circle, G } from 'react-native-svg';
+import Svg, { Line, Circle, G, Rect } from 'react-native-svg';
 import { Video, ResizeMode } from 'expo-av';
 
 type MeshPoint = { id: string; x: number; y: number };
@@ -21,10 +21,16 @@ type Props = {
   videoUri?: string | null;
   gridSource?: any;
   editable?: boolean;
+  // Resize props
+  contentSize?: { width: number; height: number };
+  onContentSizeChange?: (size: { width: number; height: number }) => void;
+  contentOffset?: { x: number; y: number };
+  onContentOffsetChange?: (offset: { x: number; y: number }) => void;
 };
 
 const HANDLE_RADIUS = 12;
 const HANDLE_HIT_SLOP = 20;
+const RESIZE_HANDLE_SIZE = 24;
 
 /**
  * MeshWarpEditor
@@ -40,16 +46,35 @@ const MeshWarpEditor: React.FC<Props> = ({
   videoUri,
   gridSource,
   editable = true,
+  contentSize,
+  onContentSizeChange,
+  contentOffset,
+  onContentOffsetChange,
 }) => {
   // Determine video source - prefer videoUri if provided
   const effectiveVideoSource = videoUri ? { uri: videoUri } : videoSource;
-  const [size, setSize] = useState<Size | null>(null);
+  const [containerSize, setContainerSize] = useState<Size | null>(null);
   const [activePointId, setActivePointId] = useState<string | null>(null);
+  const [activeResizeHandle, setActiveResizeHandle] = useState<string | null>(null);
+  const [resizeStartPos, setResizeStartPos] = useState<{ x: number; y: number } | null>(null);
+  const [resizeStartSize, setResizeStartSize] = useState<Size | null>(null);
+  const [resizeStartOffset, setResizeStartOffset] = useState<{ x: number; y: number } | null>(null);
+
+  // Use content size if provided, otherwise use container size
+  const size = contentSize || containerSize;
+  const offset = contentOffset || { x: 0, y: 0 };
 
   const handleLayout = useCallback((e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
-    setSize({ width, height });
-  }, []);
+    setContainerSize({ width, height });
+    // Initialize content size if not set
+    if (!contentSize && onContentSizeChange) {
+      onContentSizeChange({ width: width * 0.8, height: height * 0.8 });
+    }
+    if (!contentOffset && onContentOffsetChange) {
+      onContentOffsetChange({ x: width * 0.1, y: height * 0.1 });
+    }
+  }, [contentSize, contentOffset, onContentSizeChange, onContentOffsetChange]);
 
   // Calculate grid dimensions from mesh
   const rows = Math.max(...mesh.map((p) => Number(p.id.split('-')[0]))) + 1 || 1;
