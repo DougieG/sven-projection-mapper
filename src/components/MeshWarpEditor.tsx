@@ -244,54 +244,57 @@ const MeshWarpEditor: React.FC<Props> = ({
       {size && (
         <>
           {/* Background: either grid or video */}
-          <View style={[StyleSheet.absoluteFill, { width: size.width, height: size.height }]}>
-            {showVideo && effectiveVideoSource ? (
-              Platform.OS === 'web' ? (
-                // Web: Use native HTML5 video for better Safari/iPad support
-                <video
-                  src={effectiveVideoSource.uri}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'fill',
-                    minWidth: '100%',
-                    minHeight: '100%',
-                  }}
-                  muted
-                  playsInline
-                  loop
-                  autoPlay
-                />
-              ) : (
-                <Video
-                  source={effectiveVideoSource}
-                  style={{ 
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: size.width, 
-                    height: size.height,
-                  }}
-                  resizeMode={ResizeMode.STRETCH}
-                  shouldPlay={false}
-                  isLooping
-                  isMuted
-                />
-              )
-            ) : gridSource ? (
-              <Image
-                source={gridSource}
-                style={{ width: size.width, height: size.height }}
-                resizeMode="stretch"
+          {showVideo && effectiveVideoSource ? (
+            Platform.OS === 'web' ? (
+              // Web: Use native HTML5 video with explicit pixel dimensions
+              <video
+                src={effectiveVideoSource.uri}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: `${size.width}px`,
+                  height: `${size.height}px`,
+                  objectFit: 'fill',
+                  zIndex: 0,
+                }}
+                muted
+                playsInline
+                loop
+                autoPlay
               />
             ) : (
-              // Default checkerboard pattern
-              <View style={[StyleSheet.absoluteFill, styles.defaultGrid]} />
-            )}
-          </View>
+              <Video
+                source={effectiveVideoSource}
+                style={{ 
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: size.width, 
+                  height: size.height,
+                }}
+                resizeMode={ResizeMode.STRETCH}
+                shouldPlay={false}
+                isLooping
+                isMuted
+              />
+            )
+          ) : gridSource ? (
+            <Image
+              source={gridSource}
+              style={{ 
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: size.width, 
+                height: size.height 
+              }}
+              resizeMode="stretch"
+            />
+          ) : (
+            // Default dark background
+            <View style={[StyleSheet.absoluteFill, styles.defaultGrid]} />
+          )}
 
           {/* Mesh overlay */}
           <Svg
