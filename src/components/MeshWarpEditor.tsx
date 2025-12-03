@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Svg, { Line, Circle, G, Rect } from 'react-native-svg';
 import { Video, ResizeMode } from 'expo-av';
+import MeshWarpCanvas from './MeshWarpCanvas';
 
 type MeshPoint = { id: string; x: number; y: number };
 type Mesh = MeshPoint[];
@@ -243,25 +244,16 @@ const MeshWarpEditor: React.FC<Props> = ({
     >
       {size && (
         <>
-          {/* Background: either grid or video */}
+          {/* Background: either grid or warped video */}
           {showVideo && effectiveVideoSource ? (
             Platform.OS === 'web' ? (
-              // Web: Use native HTML5 video with explicit pixel dimensions
-              <video
-                src={effectiveVideoSource.uri}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: `${size.width}px`,
-                  height: `${size.height}px`,
-                  objectFit: 'fill',
-                  zIndex: 0,
-                }}
-                muted
-                playsInline
-                loop
-                autoPlay
+              // Web: Use canvas-based mesh warping
+              <MeshWarpCanvas
+                mesh={mesh}
+                videoUri={effectiveVideoSource.uri}
+                width={size.width}
+                height={size.height}
+                gridSize={4}
               />
             ) : (
               <Video
