@@ -5,6 +5,7 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   GestureResponderEvent,
+  Platform,
 } from 'react-native';
 import Svg, { Line, Circle, G, Rect } from 'react-native-svg';
 import { Video, ResizeMode } from 'expo-av';
@@ -245,20 +246,38 @@ const MeshWarpEditor: React.FC<Props> = ({
           {/* Background: either grid or video */}
           <View style={[StyleSheet.absoluteFill, { width: size.width, height: size.height }]}>
             {showVideo && effectiveVideoSource ? (
-              <Video
-                source={effectiveVideoSource}
-                style={{ 
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: size.width, 
-                  height: size.height,
-                }}
-                resizeMode={ResizeMode.STRETCH}
-                shouldPlay={false}
-                isLooping
-                isMuted
-              />
+              Platform.OS === 'web' ? (
+                // Web: Use native HTML5 video for better Safari/iPad support
+                <video
+                  src={effectiveVideoSource.uri}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: size.width,
+                    height: size.height,
+                    objectFit: 'fill',
+                  }}
+                  muted
+                  playsInline
+                  loop
+                />
+              ) : (
+                <Video
+                  source={effectiveVideoSource}
+                  style={{ 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: size.width, 
+                    height: size.height,
+                  }}
+                  resizeMode={ResizeMode.STRETCH}
+                  shouldPlay={false}
+                  isLooping
+                  isMuted
+                />
+              )
             ) : gridSource ? (
               <Image
                 source={gridSource}
