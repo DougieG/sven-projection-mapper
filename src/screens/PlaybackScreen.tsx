@@ -124,9 +124,16 @@ const PlaybackScreen: React.FC<Props> = ({
   };
 
   const handleScreenTap = () => {
-    if (!playing) {
-      setShowControls((prev) => !prev);
+    if (playing) return;
+    
+    // If armed and controls are hidden, tap triggers playback
+    if (armed && !showControls) {
+      handleManualTrigger();
+      return;
     }
+    
+    // Otherwise toggle controls
+    setShowControls((prev) => !prev);
   };
 
   const handleBlackout = () => {
@@ -249,6 +256,14 @@ const PlaybackScreen: React.FC<Props> = ({
                     <Text style={styles.buttonText}>🪄 Trigger</Text>
                   </TouchableOpacity>
 
+                  {/* Hide controls / arm for tap trigger */}
+                  <TouchableOpacity
+                    style={[styles.button, styles.hideButton]}
+                    onPress={() => setShowControls(false)}
+                  >
+                    <Text style={styles.buttonText}>👆 Arm Tap</Text>
+                  </TouchableOpacity>
+
                   {/* Back to calibration */}
                   <TouchableOpacity
                     style={[styles.button, styles.calibrateButton]}
@@ -260,7 +275,7 @@ const PlaybackScreen: React.FC<Props> = ({
 
                 {/* Help text */}
                 <Text style={styles.helpText}>
-                  Wand/Space/Enter = Play • Arrows = Navigate cues • Esc = Blackout
+                  Tap "Arm Tap" → then TAP anywhere on screen to play video
                 </Text>
               </View>
             </SafeAreaView>
@@ -391,6 +406,9 @@ const styles = StyleSheet.create({
   calibrateButton: {
     backgroundColor: '#444',
   },
+  hideButton: {
+    backgroundColor: '#006644',
+  },
   buttonDisabled: {
     opacity: 0.5,
   },
@@ -400,10 +418,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   helpText: {
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: 12,
     textAlign: 'center',
     marginTop: 12,
+  },
+  helpTextSmall: {
+    color: 'rgba(255, 255, 255, 0.4)',
+    fontSize: 10,
+    textAlign: 'center',
+    marginTop: 4,
   },
 });
 
