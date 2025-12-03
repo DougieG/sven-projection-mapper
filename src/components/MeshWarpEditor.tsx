@@ -243,19 +243,26 @@ const MeshWarpEditor: React.FC<Props> = ({
       {size && (
         <>
           {/* Background: either grid or video */}
-          <View style={StyleSheet.absoluteFill}>
+          <View style={[StyleSheet.absoluteFill, { width: size.width, height: size.height }]}>
             {showVideo && effectiveVideoSource ? (
               <Video
                 source={effectiveVideoSource}
-                style={StyleSheet.absoluteFill}
-                resizeMode={ResizeMode.COVER}
+                style={{ 
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: size.width, 
+                  height: size.height,
+                }}
+                resizeMode={ResizeMode.STRETCH}
                 shouldPlay={false}
                 isLooping
+                isMuted
               />
             ) : gridSource ? (
               <Image
                 source={gridSource}
-                style={StyleSheet.absoluteFill}
+                style={{ width: size.width, height: size.height }}
                 resizeMode="stretch"
               />
             ) : (
@@ -282,6 +289,8 @@ const MeshWarpEditor: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
   defaultGrid: {
     backgroundColor: '#222',

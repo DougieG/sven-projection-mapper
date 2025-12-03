@@ -116,17 +116,15 @@ const CalibrationScreen: React.FC<Props> = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Mesh Editor - resizable */}
+      {/* Mesh Editor - fullscreen */}
       <View style={styles.editorContainer}>
-        <ResizableVideoContainer>
-          <MeshWarpEditor
-            mesh={mesh}
-            onMeshChange={onMeshChange}
-            showVideo={showVideo}
-            videoUri={videoUri}
-            editable={true}
-          />
-        </ResizableVideoContainer>
+        <MeshWarpEditor
+          mesh={mesh}
+          onMeshChange={onMeshChange}
+          showVideo={showVideo}
+          videoUri={videoUri}
+          editable={true}
+        />
       </View>
 
       {/* Cue List Panel (collapsible) */}

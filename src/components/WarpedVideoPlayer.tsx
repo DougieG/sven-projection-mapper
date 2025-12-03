@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, StyleSheet, Animated, Text } from 'react-native';
+import { View, StyleSheet, Animated, Text, useWindowDimensions } from 'react-native';
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 
 type MeshPoint = { id: string; x: number; y: number };
@@ -35,6 +35,7 @@ const WarpedVideoPlayer: React.FC<Props> = ({
   const videoRef = useRef<Video | null>(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [isReady, setIsReady] = useState(false);
+  const { width, height } = useWindowDimensions();
 
   // Handle play trigger
   useEffect(() => {
@@ -97,22 +98,29 @@ const WarpedVideoPlayer: React.FC<Props> = ({
         - Bilinear interpolate within each cell
       */}
       
-      <Animated.View style={[StyleSheet.absoluteFill, { opacity: fadeAnim }]}>
+      <Animated.View style={[StyleSheet.absoluteFill, { opacity: fadeAnim, width, height }]}>
         {source ? (
           <Video
             ref={videoRef}
             source={source}
-            style={StyleSheet.absoluteFill}
-            resizeMode={ResizeMode.COVER}
+            style={{ 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width, 
+              height,
+            }}
+            resizeMode={ResizeMode.STRETCH}
             isLooping={false}
             shouldPlay={false}
             onLoad={handleLoad}
             onPlaybackStatusUpdate={handlePlaybackStatus}
+            isMuted={false}
           />
         ) : (
           <View style={styles.placeholder}>
             <Text style={styles.placeholderText}>
-              No video loaded{'\n'}Add reveal-video.mp4 to assets/
+              No video loaded{'\n'}Select a video to preview
             </Text>
           </View>
         )}
