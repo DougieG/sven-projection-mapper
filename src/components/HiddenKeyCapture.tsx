@@ -30,11 +30,60 @@ const HiddenKeyCapture: React.FC<Props> = ({ onKeyPress, enabled = true }) => {
     return () => clearInterval(focusInterval);
   }, [enabled]);
 
+  // Web: Set up Media Session API for hardware media button support
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !enabled) return;
+    
+    if ('mediaSession' in navigator) {
+      // Set up media session to capture hardware buttons
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: 'Projection Mapper',
+        artist: 'Ready',
+      });
+      
+      // Handle play/pause from hardware buttons
+      navigator.mediaSession.setActionHandler('play', () => {
+        console.log('🎬 Media Session: play');
+        onKeyPress(' ');
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        console.log('🎬 Media Session: pause');
+        onKeyPress(' ');
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        console.log('🎬 Media Session: previous');
+        onKeyPress('ArrowLeft');
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        console.log('🎬 Media Session: next');
+        onKeyPress('ArrowRight');
+      });
+    }
+    
+    return () => {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', null);
+        navigator.mediaSession.setActionHandler('pause', null);
+      }
+    };
+  }, [onKeyPress, enabled]);
+
   // Web fallback: listen to window keydown
   useEffect(() => {
     if (Platform.OS !== 'web' || !enabled) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Debug: show what key was pressed
+      console.log(`🔑 Key pressed: "${e.key}" (code: ${e.code})`);
+      
+      // Show on-screen for debugging
+      const debugDiv = document.getElementById('key-debug');
+      if (debugDiv) {
+        debugDiv.textContent = `Last key: ${e.key}`;
+        debugDiv.style.opacity = '1';
+        setTimeout(() => { debugDiv.style.opacity = '0.3'; }, 1000);
+      }
+      
       onKeyPress(e.key);
     };
 

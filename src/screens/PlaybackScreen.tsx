@@ -179,6 +179,13 @@ const PlaybackScreen: React.FC<Props> = ({
             />
           </TouchableOpacity>
 
+          {/* Key Debug Display (always visible) */}
+          <View style={styles.keyDebug} nativeID="key-debug-container">
+            <Text nativeID="key-debug" style={styles.keyDebugText}>
+              Press your shutter to test
+            </Text>
+          </View>
+
           {/* Status Overlay */}
           {showControls && (
             <SafeAreaView style={styles.overlay} pointerEvents="box-none">
@@ -428,6 +435,22 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     marginTop: 4,
+  },
+  keyDebug: {
+    position: 'absolute',
+    top: 50,
+    right: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#444',
+  },
+  keyDebugText: {
+    color: '#0ff',
+    fontSize: 12,
+    fontFamily: 'monospace',
   },
 });
 
